@@ -15,14 +15,19 @@ screen.fill('white')
 
 # default vars
 debug = False # debug
-debugStart = True # debug at start (print default vars)
+debugStart = False # debug at start (print default vars)
 debugTimer = 0 # how long to wait at debug points
-n_points = 750 # number of nodes
+includeEnd = False # include end to start distance
+inp = False
+if inp:
+	n_points = int(input("number of nodes:\n- ")) # number of nodes
+else:
+	n_points = 15
 points = np.random.rand(n_points, 2)
 n_ants = 5 # number of ants
-alpha = 1 # how much it desires close nodes (1 = don't care)
-beta = 1 # how strictly it follows pheromones (1 = lenient)
-evaporation_rate = 0.6 # amount pheremone evaporates each iteration
+alpha = 1 # how strictly it follows pheromones (1 = lenient)
+beta = 1 # how much it desires close nodes (1 = don't care)
+evaporation_rate = 0.5 # amount pheremone evaporates each iteration
 if debugStart:
 	print(evaporation_rate)
 	print(beta)
@@ -103,6 +108,10 @@ class Ant:
 		if False not in self.visited:
 			if not self.disabled:
 				self.able()
+				if includeEnd:
+					start = np.array([self.nodes[self.path[0]][0], self.nodes[self.path[0]][-1]])
+					end = np.array([self.nodes[self.path[-1]][0], self.nodes[self.path[-1]][-1]])
+					self.path_length += distance(start, end)
 				return [self.path, self.path_length]
 		return None
 
